@@ -62,16 +62,13 @@ export class NodeService {
   }
 
   topoX(controller: Controller, project: Project) {
-    const workspace = this.route.snapshot.queryParamMap.get('workspack');
-    const username = this.route.snapshot.queryParamMap.get('username');
-    if (!workspace?.length || !username?.length) {
-      alert('Missing workspace or username parameter in the URL.');
+    if (!project.name.startsWith('topo-manager--')) {
+      alert('This feature is only available for Topo Manager projects.');
       return;
     }
 
-    // 直接使用 HttpClient
     return this.http.post(
-      `https://topo-manager--${workspace}--${username}.coder-open.h3c.com/api/v1/topox`,
+      `https://${project.name}.coder-open.h3c.com/api/v1/topox`,
       { project_id: project.project_id }
     );
   }
