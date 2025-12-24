@@ -91,6 +91,12 @@ export class NodesMenuComponent {
     this.nodeService.resetAllNodes(this.controller, this.project).subscribe(() => {
       this.toasterService.success('Successfully reset all console connections');
     });
+
+  }
+  GenerateTopox() {
+    this.nodeService.topoX(this.controller, this.project).subscribe(() => {
+      this.toasterService.success('Generate topox successfully');
+    });
   }
 
   public confirmControlsActions(type) {
@@ -111,6 +117,8 @@ export class NodesMenuComponent {
         this.reloadNodes();
       } else if (confirmAction_result.isAction && confirmAction_result.actionType == 'suspend') {
         this.suspendNodes();
+      }  else if (confirmAction_result.isAction && confirmAction_result.actionType == 'topox') {
+        this.GenerateTopox();
       } else {
         this.resetNodes()
       }

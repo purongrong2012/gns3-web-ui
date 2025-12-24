@@ -7,10 +7,12 @@ import { Project } from '@models/project';
 import { Controller } from '@models/controller';
 import { Template } from '@models/template';
 import { HttpController } from './http-controller.service';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class NodeService {
-  constructor(private httpController: HttpController) {}
+  constructor(private httpController: HttpController, private route: ActivatedRoute, private http: HttpClient) {}
 
   getNodeById(controller: Controller, projectId: string, nodeId: string) {
     return this.httpController.get(controller, `/projects/${projectId}/nodes/${nodeId}`);
@@ -59,6 +61,20 @@ export class NodeService {
     return this.httpController.post(controller, `/projects/${project.project_id}/nodes/console/reset`, {});
   }
 
+  topoX(controller: Controller, project: Project) {
+    const workspace = this.route.snapshot.queryParamMap.get('workspack');
+    const username = this.route.snapshot.queryParamMap.get('username');
+    if(!workspace?.length || !username?.length){ {
+      alert('Missing workspace or username parameter in the URL.');
+      return;      
+    }
+    
+    // 直接使用 HttpClient
+    return this.http.post(
+      `https://topo-manager--${workspace}--${username}.coder-open.h3c.com/api/v1/topox`,
+      { project_id: project.project_id }
+    );
+  }
   createFromTemplate(
     controller: Controller,
     project: Project,
