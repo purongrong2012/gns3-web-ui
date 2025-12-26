@@ -99,6 +99,7 @@ import { VpcsPreferencesComponent } from '@components/preferences/vpcs/vpcs-pref
 import { VpcsTemplateDetailsComponent } from '@components/preferences/vpcs/vpcs-template-details/vpcs-template-details.component';
 import { VpcsTemplatesComponent } from '@components/preferences/vpcs/vpcs-templates/vpcs-templates.component';
 import { ChangeHostnameDialogComponent } from '@components/project-map/change-hostname-dialog/change-hostname-dialog.component';
+import { DeployDialogComponent } from '@components/project-map/deploy-dialog/deploy-dialog.component';
 import { ChangeSymbolDialogComponent } from '@components/project-map/change-symbol-dialog/change-symbol-dialog.component';
 import { ConsoleWrapperComponent } from '@components/project-map/console-wrapper/console-wrapper.component';
 import { ContextConsoleMenuComponent } from '@components/project-map/context-console-menu/context-console-menu.component';
@@ -514,6 +515,7 @@ import { DeleteResourceConfirmationDialogComponent } from '@components/resource-
         NewTemplateDialogComponent,
         ChangeHostnameActionComponent,
         ChangeHostnameDialogComponent,
+        DeployDialogComponent,
         ApplianceInfoDialogComponent,
         ReadmeEditorComponent,
         MarkedDirective,

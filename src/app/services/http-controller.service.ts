@@ -219,8 +219,10 @@ export class HttpController {
       if (!controller.protocol) {
         controller.protocol = location.protocol as ControllerProtocol;
       }
-      url = `${controller.protocol}//${controller.host}:${controller.port}/${environment.current_version}${url}`;
+      //url = `${controller.protocol}//${controller.host}:${controller.port}/${environment.current_version}${url}`;
+
       // url = `${controller.protocol}//coder-open.h3c.com:3080/${environment.current_version}${url}`;
+      url = `${controller.protocol}//10.144.41.149:3080/${environment.current_version}${url}`;
     } else {
       url = `/${environment.current_version}${url}`;
     }

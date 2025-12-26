@@ -73,7 +73,14 @@ export class NodeService {
     );
   }
   AI(controller: Controller, project: Project) {
-    const url = 'https://8000--main--new1217--h25380.coder-open.h3c.com/cli';
+    if (!project.name.startsWith('topo-manager--')) {
+      alert('This feature is only available for Topo Manager projects.');
+      return;
+    }
+
+    let projectName = project.name.split('topo-manager--')[1]
+    const url = `https://8000--main--${projectName}.coder-open.h3c.com/cli`;
+    //const url = `https://${project.name}.coder-open.h3c.com/cli`;
     const fullUrl = new URL(url);
     const newWindow = window.open(fullUrl.toString(), '_blank');
     
@@ -82,7 +89,13 @@ export class NodeService {
     }
   }
   CLI(controller: Controller, project: Project) {
-    const url = 'https://8000--main--new1217--h25380.coder-open.h3c.com/generate';
+    if (!project.name.startsWith('topo-manager--')) {
+      alert('This feature is only available for Topo Manager projects.');
+      return;
+    }
+    
+    let projectName = project.name.split('topo-manager--')[1]
+    const url = `https://8000--main--${projectName}.coder-open.h3c.com/generate`;
     const fullUrl = new URL(url);
     const newWindow = window.open(fullUrl.toString(), '_blank');
     
