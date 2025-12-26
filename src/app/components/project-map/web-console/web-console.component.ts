@@ -7,6 +7,7 @@ import { Project } from '@models/project';
 import { Controller } from '@models/controller';
 import { NodeConsoleService } from '@services/nodeConsole.service';
 import { ThemeService } from '@services/theme.service';
+import { HttpClient} from '@angular/common/http';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -26,7 +27,7 @@ export class WebConsoleComponent implements OnInit, AfterViewInit {
 
   @ViewChild('terminal') terminal: ElementRef;
 
-  constructor(private consoleService: NodeConsoleService, private themeService: ThemeService) {}
+  constructor(private consoleService: NodeConsoleService, private themeService: ThemeService, private http: HttpClient) {}
 
   ngOnInit() {
     this.themeService.getActualTheme() === 'light'
@@ -48,10 +49,25 @@ export class WebConsoleComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
+    const requestData = {
+        "name":  "",
+        "host":  "",
+        "port":  23,
+        "type":  "telnet",
+        "ui":  false,
+        "onSameWindow":  "fail"  
+    }
+    console.log('About to send POST', `http://${this.controller.host}:3000/api/v1/term/openterm`)  
+    const res = await this.http.post(
+      `http://${this.controller.host}:3000/api/v1/term/openterm`,
+       requestData
+    ).subscribe({ next: (v) => console.log(v), error: (e) => console.error(e) });
+    
     this.term.open(this.terminal.nativeElement);
     if (this.isLightThemeEnabled)
       this.term.setOption('theme', { background: 'white', foreground: 'black', cursor: 'black' });
+
 
     const socket = new WebSocket(this.consoleService.getUrl(this.controller, this.node));
 

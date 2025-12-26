@@ -62,6 +62,26 @@
     (click)="confirmControlsActions('topox')"
     class="menu-button"
   >
-    <mat-icon>note_add</mat-icon>
+    <mat-icon>device_hub</mat-icon>
+  </button>
+
+  <button
+    matTooltip="AI Assistant"
+    matTooltipClass="custom-tooltip"
+    mat-icon-button
+    (click)="gotoAI()"
+    class="menu-button"
+  >
+    <mat-icon>AI</mat-icon>
+  </button>  
+
+  <button
+    matTooltip="CLI"
+    matTooltipClass="custom-tooltip"
+    mat-icon-button
+    (click)="gotoCLI()"
+    class="menu-button"
+  >
+    <mat-icon>code</mat-icon>
   </button>
 </div>

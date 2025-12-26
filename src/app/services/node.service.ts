@@ -72,6 +72,24 @@ export class NodeService {
       { project_id: project.project_id }
     );
   }
+  AI(controller: Controller, project: Project) {
+    const url = 'https://8000--main--new1217--h25380.coder-open.h3c.com/cli';
+    const fullUrl = new URL(url);
+    const newWindow = window.open(fullUrl.toString(), '_blank');
+    
+    if (!newWindow) {
+      window.location.href = fullUrl.toString();
+    }
+  }
+  CLI(controller: Controller, project: Project) {
+    const url = 'https://8000--main--new1217--h25380.coder-open.h3c.com/generate';
+    const fullUrl = new URL(url);
+    const newWindow = window.open(fullUrl.toString(), '_blank');
+    
+    if (!newWindow) {
+      window.location.href = fullUrl.toString();
+    }
+  }
   createFromTemplate(
     controller: Controller,
     project: Project,

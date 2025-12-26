@@ -98,7 +98,12 @@ export class NodesMenuComponent {
       this.toasterService.success('Generate topox successfully');
     });
   }
-
+  public gotoAI() {
+    this.nodeService.AI(this.controller, this.project);
+  }
+  public gotoCLI() {
+    this.nodeService.CLI(this.controller, this.project);
+  }
   public confirmControlsActions(type) {
     const dialogRef = this.dialog.open(NodesMenuConfirmationDialogComponent, {
       width: '500px',
