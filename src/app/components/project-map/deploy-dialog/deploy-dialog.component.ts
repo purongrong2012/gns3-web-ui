@@ -80,17 +80,20 @@ export class DeployDialogComponent implements OnInit {
         alert('This feature is only available for Topo Manager projects.');
         return;
       }
-      const url = `https://${this.project.name}.coder-open.h3c.com/api/v1/deploy`;
-      
-      this.http.post(url, deployData).subscribe({
-        next: () => {
-          this.toasterService.success('Deployment request sent successfully.');
-          this.dialogRef.close(true); // 传递结果
-        },
-        error: (error) => {
-          this.toasterService.error(`Deployment failed: ${error.message}`);
-        }
+      this.nodeService.topoX(this.controller, this.project).subscribe(() => {
+        const url = `https://${this.project.name}.coder-open.h3c.com/api/v1/deploy`;
+        
+        this.http.post(url, deployData).subscribe({
+          next: () => {
+            this.toasterService.success('启动成功，设备正在部署中，请稍后查看');
+            this.dialogRef.close(true); // 传递结果
+          },
+          error: (error) => {
+            this.toasterService.error(`Deployment failed: ${error.message}`);
+          }
+        });
       });
+
     } else {
       this.toasterService.error('Fill all required fields.');
     }
