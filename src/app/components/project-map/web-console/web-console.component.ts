@@ -7,6 +7,7 @@ import { Project } from '@models/project';
 import { Controller } from '@models/controller';
 import { NodeConsoleService } from '@services/nodeConsole.service';
 import { ThemeService } from '@services/theme.service';
+import { HttpClient} from '@angular/common/http';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -26,7 +27,7 @@ export class WebConsoleComponent implements OnInit, AfterViewInit {
 
   @ViewChild('terminal') terminal: ElementRef;
 
-  constructor(private consoleService: NodeConsoleService, private themeService: ThemeService) {}
+  constructor(private consoleService: NodeConsoleService, private themeService: ThemeService, private http: HttpClient) {}
 
   ngOnInit() {
     this.themeService.getActualTheme() === 'light'
@@ -48,10 +49,11 @@ export class WebConsoleComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
     this.term.open(this.terminal.nativeElement);
     if (this.isLightThemeEnabled)
       this.term.setOption('theme', { background: 'white', foreground: 'black', cursor: 'black' });
+
 
     const socket = new WebSocket(this.consoleService.getUrl(this.controller, this.node));
 
@@ -68,7 +70,19 @@ export class WebConsoleComponent implements OnInit, AfterViewInit {
     this.term.loadAddon(this.fitAddon);
     this.fitAddon.activate(this.term);
     this.term.focus();
-
+    // 添加终端数据事件监听，将终端内容写给后台
+    this.term.onData((val) => {
+      const msg = JSON.stringify({
+        "type": "terminal_write",
+        "detail": {
+          "name": this.node.name,
+          "data": val
+        }
+      });
+      if (socket.readyState === 1) { // WebSocket.OPEN 状态为1，表示连接已建立
+        socket.send(msg);
+      }
+    });
     this.term.attachCustomKeyEventHandler((key: KeyboardEvent) => {
       if (key.code === 'KeyC' || key.code === 'KeyV') {
         if (key.ctrlKey && key.shiftKey) {

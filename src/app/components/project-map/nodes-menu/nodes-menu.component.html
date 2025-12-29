@@ -12,7 +12,7 @@
     matTooltip="Start/Resume all nodes"
     matTooltipClass="custom-tooltip"
     mat-icon-button
-    (click)="confirmControlsActions('start')"
+    (click)="startNodes()"
     class="menu-button"
   >
     <mat-icon>play_arrow</mat-icon>
@@ -62,6 +62,26 @@
     (click)="confirmControlsActions('topox')"
     class="menu-button"
   >
-    <mat-icon>note_add</mat-icon>
+    <mat-icon>device_hub</mat-icon>
+  </button>
+
+  <button
+    matTooltip="AI Assistant"
+    matTooltipClass="custom-tooltip"
+    mat-icon-button
+    (click)="gotoAI()"
+    class="menu-button"
+  >
+    <mat-icon style="font-size: 18px;">AI</mat-icon>
+  </button>  
+
+  <button
+    matTooltip="CLI"
+    matTooltipClass="custom-tooltip"
+    mat-icon-button
+    (click)="gotoCLI()"
+    class="menu-button"
+  >
+    <mat-icon>code</mat-icon>
   </button>
 </div>

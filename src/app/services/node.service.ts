@@ -72,6 +72,37 @@ export class NodeService {
       { project_id: project.project_id }
     );
   }
+  AI(controller: Controller, project: Project) {
+    if (!project.name.startsWith('topo-manager--')) {
+      alert('This feature is only available for Topo Manager projects.');
+      return;
+    }
+
+    let projectName = project.name.split('topo-manager--')[1]
+    const url = `https://8000--main--${projectName}.coder-open.h3c.com/cli`;
+    //const url = `https://${project.name}.coder-open.h3c.com/cli`;
+    const fullUrl = new URL(url);
+    const newWindow = window.open(fullUrl.toString(), '_blank');
+    
+    if (!newWindow) {
+      window.location.href = fullUrl.toString();
+    }
+  }
+  CLI(controller: Controller, project: Project) {
+    if (!project.name.startsWith('topo-manager--')) {
+      alert('This feature is only available for Topo Manager projects.');
+      return;
+    }
+    
+    let projectName = project.name.split('topo-manager--')[1]
+    const url = `https://8000--main--${projectName}.coder-open.h3c.com/generate`;
+    const fullUrl = new URL(url);
+    const newWindow = window.open(fullUrl.toString(), '_blank');
+    
+    if (!newWindow) {
+      window.location.href = fullUrl.toString();
+    }
+  }
   createFromTemplate(
     controller: Controller,
     project: Project,

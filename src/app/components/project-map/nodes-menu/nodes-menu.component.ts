@@ -11,6 +11,9 @@ import { ControllerService } from '@services/controller.service';
 import { SettingsService } from '@services/settings.service';
 import { ToasterService } from '@services/toaster.service';
 import { NodesMenuConfirmationDialogComponent } from './nodes-menu-confirmation-dialog/nodes-menu-confirmation-dialog.component';
+// import { Node } from '../../../../../cartography/models/node';
+// import { Controller } from '@models/controller';
+import { DeployDialogComponent } from '../deploy-dialog/deploy-dialog.component';
 
 @Component({
   selector: 'app-nodes-menu',
@@ -64,8 +67,22 @@ export class NodesMenuComponent {
   }
 
   startNodes() {
-    this.nodeService.startAll(this.controller, this.project).subscribe(() => {
-      this.toasterService.success('All nodes successfully started');
+    // this.nodeService.startAll(this.controller, this.project).subscribe(() => {
+    //   this.toasterService.success('All nodes successfully started');
+    // });
+    const dialogRef = this.dialog.open(DeployDialogComponent, {
+      autoFocus: false,
+      disableClose: true,
+      data: {  // 添加 data 属性来传递参数
+        controller: this.controller,
+        project: this.project
+      }
+    });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // 处理对话框关闭后的逻辑
+      }
     });
   }
 
@@ -98,7 +115,12 @@ export class NodesMenuComponent {
       this.toasterService.success('Generate topox successfully');
     });
   }
-
+  public gotoAI() {
+    this.nodeService.AI(this.controller, this.project);
+  }
+  public gotoCLI() {
+    this.nodeService.CLI(this.controller, this.project);
+  }
   public confirmControlsActions(type) {
     const dialogRef = this.dialog.open(NodesMenuConfirmationDialogComponent, {
       width: '500px',
