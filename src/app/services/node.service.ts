@@ -78,7 +78,7 @@ export class NodeService {
       return;
     }
 
-    const url = `https://${project.name}.coder-open.h3c.com/cli`;
+    const url = `https://${project.name}.coder-open.h3c.com/generate`;
     const fullUrl = new URL(url);
     const newWindow = window.open(fullUrl.toString(), '_blank');
     
@@ -92,7 +92,7 @@ export class NodeService {
       return;
     }
     
-    const url = `https://${project.name}.coder-open.h3c.com/generate`;
+    const url = `https://${project.name}.coder-open.h3c.com/cli`;
     const fullUrl = new URL(url);
     const newWindow = window.open(fullUrl.toString(), '_blank');
     
