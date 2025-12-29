@@ -50,20 +50,6 @@ export class WebConsoleComponent implements OnInit, AfterViewInit {
   }
 
   async ngAfterViewInit() {
-    const requestData = {
-        "name":  "",
-        "host":  "",
-        "port":  23,
-        "type":  "telnet",
-        "ui":  false,
-        "onSameWindow":  "fail"  
-    }
-
-    const res = await this.http.post(
-      `https://${this.controller.host}:3000/api/v1/term/openterm`,
-       requestData
-    ).subscribe({ next: (v) => console.log(v), error: (e) => console.error(e) });
-    
     this.term.open(this.terminal.nativeElement);
     if (this.isLightThemeEnabled)
       this.term.setOption('theme', { background: 'white', foreground: 'black', cursor: 'black' });
@@ -84,7 +70,19 @@ export class WebConsoleComponent implements OnInit, AfterViewInit {
     this.term.loadAddon(this.fitAddon);
     this.fitAddon.activate(this.term);
     this.term.focus();
-
+    // 添加终端数据事件监听，将终端内容写给后台
+    this.term.onData((val) => {
+      const msg = JSON.stringify({
+        "type": "terminal_write",
+        "detail": {
+          "name": this.node.name,
+          "data": val
+        }
+      });
+      if (socket.readyState === 1) { // WebSocket.OPEN 状态为1，表示连接已建立
+        socket.send(msg);
+      }
+    });
     this.term.attachCustomKeyEventHandler((key: KeyboardEvent) => {
       if (key.code === 'KeyC' || key.code === 'KeyV') {
         if (key.ctrlKey && key.shiftKey) {
