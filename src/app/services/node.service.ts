@@ -68,7 +68,7 @@ export class NodeService {
     }
 
     return this.http.post(
-      `https://${project.name}.coder-open.h3c.com/api/v1/topox`,
+      `https://${project.name}.coder-open.h3c.com/api/v1/topox-from-gns3`,
       { project_id: project.project_id }
     );
   }
