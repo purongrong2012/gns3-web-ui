@@ -62,7 +62,7 @@ export class NodeService {
   }
 
   topoX(controller: Controller, project: Project) {
-    if (!project.name.startsWith('topo-manager--')) {
+    if (!project.name.startsWith('topo-scriptgen--')) {
       alert('This feature is only available for Topo Manager projects.');
       return;
     }
@@ -73,14 +73,12 @@ export class NodeService {
     );
   }
   AI(controller: Controller, project: Project) {
-    if (!project.name.startsWith('topo-manager--')) {
+    if (!project.name.startsWith('topo-scriptgen--')) {
       alert('This feature is only available for Topo Manager projects.');
       return;
     }
 
-    let projectName = project.name.split('topo-manager--')[1]
-    const url = `https://8000--main--${projectName}.coder-open.h3c.com/cli`;
-    //const url = `https://${project.name}.coder-open.h3c.com/cli`;
+    const url = `https://${project.name}.coder-open.h3c.com/cli`;
     const fullUrl = new URL(url);
     const newWindow = window.open(fullUrl.toString(), '_blank');
     
@@ -89,13 +87,12 @@ export class NodeService {
     }
   }
   CLI(controller: Controller, project: Project) {
-    if (!project.name.startsWith('topo-manager--')) {
+    if (!project.name.startsWith('topo-scriptgen--')) {
       alert('This feature is only available for Topo Manager projects.');
       return;
     }
     
-    let projectName = project.name.split('topo-manager--')[1]
-    const url = `https://8000--main--${projectName}.coder-open.h3c.com/generate`;
+    const url = `https://${project.name}.coder-open.h3c.com/generate`;
     const fullUrl = new URL(url);
     const newWindow = window.open(fullUrl.toString(), '_blank');
     

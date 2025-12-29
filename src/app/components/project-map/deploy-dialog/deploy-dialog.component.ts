@@ -76,13 +76,11 @@ export class DeployDialogComponent implements OnInit {
         // controller: this.controller,
         // project: this.project
       };
-      if (!this.project.name.startsWith('topo-manager--')) {
+      if (!this.project.name.startsWith('topo-scriptgen--')) {
         alert('This feature is only available for Topo Manager projects.');
         return;
       }
-      // 使用正确的 URL
-      let projectName = this.project.name.split('topo-manager--')[1]
-      const url = `https://8000--main--${projectName}.coder-open.h3c.com/api/v1/deploy`;
+      const url = `https://${this.project.name}.coder-open.h3c.com/api/v1/deploy`;
       
       this.http.post(url, deployData).subscribe({
         next: () => {
