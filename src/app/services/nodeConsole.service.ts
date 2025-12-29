@@ -71,8 +71,8 @@ export class NodeConsoleService {
 	  if (controller.protocol === "https:") {
 		  protocol = "wss"
 	  }
-
-    return `${protocol}://${controller.host}:${controller.port}/${environment.current_version}/projects/${node.project_id}/nodes/${node.node_id}/console/ws?token=${controller.authToken}`
+    // return `${protocol}://${controller.host}:${controller.port}/${environment.current_version}/projects/${node.project_id}/nodes/${node.node_id}/console/ws?token=${controller.authToken}`
+    return `${protocol}://topo-executors.coder-open.h3c.com/${controller.host}?terminal=${node.name}`
   }
 
   openConsolesForAllNodesInWidget(nodes: Node[]) {

@@ -58,9 +58,9 @@ export class WebConsoleComponent implements OnInit, AfterViewInit {
         "ui":  false,
         "onSameWindow":  "fail"  
     }
-    console.log('About to send POST', `http://${this.controller.host}:3000/api/v1/term/openterm`)  
+
     const res = await this.http.post(
-      `http://${this.controller.host}:3000/api/v1/term/openterm`,
+      `https://${this.controller.host}:3000/api/v1/term/openterm`,
        requestData
     ).subscribe({ next: (v) => console.log(v), error: (e) => console.error(e) });
     

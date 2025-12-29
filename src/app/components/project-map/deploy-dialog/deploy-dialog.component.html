@@ -1,0 +1,31 @@
+<h1 mat-dialog-title>配置ITC接口</h1>
+
+<div class="modal-form-container">
+  <div class="content">
+    <div class="default-content">
+      <mat-card class="matCard">
+        <form [formGroup]="inputForm">      
+          <!-- 版本目录文本框 -->
+          <mat-form-field class="form-field">
+            <mat-label>版本目录</mat-label>
+            <input matInput type="text" formControlName="versionPath" placeholder="请输入版本目录路径" />
+          </mat-form-field>
+          
+          <!-- 设备类型下拉框 -->
+          <mat-form-field class="form-field">
+            <mat-label>设备类型</mat-label>
+            <mat-select formControlName="deviceType">
+              <mat-option value="simware9cen">simware9cen</mat-option>
+              <mat-option value="simware9dis">simware9dis</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancelClick()" color="accent">Cancel</button>
+  <button mat-button (click)="onSaveClick()" tabindex="2" mat-raised-button color="primary">Apply</button>
+</div>
