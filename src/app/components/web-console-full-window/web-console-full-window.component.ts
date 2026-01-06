@@ -72,35 +72,45 @@ export class WebConsoleFullWindowComponent implements OnInit {
   openTerminal() {
     setTimeout(() => {
       this.term.open(this.terminal.nativeElement);
-      const socket = new WebSocket(this.consoleService.getUrl(this.controller, this.node));
 
-      socket.onerror = (event) => {
-        this.term.write('Connection lost' + '\r\n');
-      };
-      socket.onclose = (event) => {
-        this.term.write('Connection closed' + '\r\n');
-      };
+      this.consoleService.getUrl(this.controller, this.node).subscribe({
+        next: (url: string) => {
+          console.log('WebSocket URL:', url);
+          // 创建WebSocket连接
+          const socket = new WebSocket(url);
+          socket.onerror = (event) => {
+            this.term.write('Connection lost' + '\r\n');
+          };
+          socket.onclose = (event) => {
+            this.term.write('Connection closed' + '\r\n');
+          };
 
-      const attachAddon = new AttachAddon(socket);
-      this.term.loadAddon(attachAddon);
-      this.term.setOption('cursorBlink', true);
-      this.term.loadAddon(this.fitAddon);
-      this.fitAddon.activate(this.term);
-      this.fitAddon.fit();
-      this.term.focus();
+          const attachAddon = new AttachAddon(socket);
+          this.term.loadAddon(attachAddon);
+          this.term.setOption('cursorBlink', true);
+          this.term.loadAddon(this.fitAddon);
+          this.fitAddon.activate(this.term);
+          this.fitAddon.fit();
+          this.term.focus();
 
-      this.term.attachCustomKeyEventHandler((key: KeyboardEvent) => {
-        if (key.code === 'KeyC' || key.code === 'KeyV') {
-          if (key.ctrlKey && key.shiftKey) {
-            return false;
-          }
+          this.term.attachCustomKeyEventHandler((key: KeyboardEvent) => {
+            if (key.code === 'KeyC' || key.code === 'KeyV') {
+              if (key.ctrlKey && key.shiftKey) {
+                return false;
+              }
+            }
+            return true;
+          });
+
+          let numberOfColumns = Math.round(window.innerWidth / this.consoleService.getLineWidth());
+          let numberOfRows = Math.round(window.innerHeight / this.consoleService.getLineHeight());
+          this.term.resize(numberOfColumns, numberOfRows);
+        },
+        error: (err) => {
+          console.error('Error getting WebSocket URL:', err.message);
+          // 显示用户友好的错误消息
         }
-        return true;
       });
-
-      let numberOfColumns = Math.round(window.innerWidth / this.consoleService.getLineWidth());
-      let numberOfRows = Math.round(window.innerHeight / this.consoleService.getLineHeight());
-      this.term.resize(numberOfColumns, numberOfRows);
     }, 0);
   }
 }

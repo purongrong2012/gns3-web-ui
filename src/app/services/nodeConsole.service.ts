@@ -2,11 +2,15 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Controller } from '@models/controller';
 import { Subject } from 'rxjs';
 import { Node } from '../cartography/models/node';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToasterService } from './toaster.service';
 import { MapSettingsService } from './mapsettings.service';
 import { node } from 'prop-types';
 import { environment } from 'environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Project } from '@models/project';
+import { Observable, of, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class NodeConsoleService {
@@ -27,7 +31,9 @@ export class NodeConsoleService {
   constructor(
     private router: Router,
     private toasterService: ToasterService,
-    private mapSettingsService: MapSettingsService
+    private mapSettingsService: MapSettingsService,
+    private http: HttpClient,
+    private route: ActivatedRoute
   ) {}
 
   getNumberOfColumns() {
@@ -66,15 +72,52 @@ export class NodeConsoleService {
     return this.defaultConsoleHeight / this.defaultNumberOfRows;
   }
 
-  getUrl(controller: Controller, node: Node) {
-    let protocol:string = "ws"
-	  if (controller.protocol === "https:") {
-		  protocol = "wss"
-	  }
-    // return `${protocol}://${controller.host}:${controller.port}/${environment.current_version}/projects/${node.project_id}/nodes/${node.node_id}/console/ws?token=${controller.authToken}`
-    return `${protocol}://topo-executors.coder-open.h3c.com/${controller.host}?terminal=${node.name}`
-  }
+ getUrl(controller: Controller, node: Node): Observable<string> {
+    let projectName = "";
+    this.route.queryParams.subscribe(params => {
+      projectName = params['projectName'];
+    });
+    // 1. 项目名称前缀校验
+    if (!projectName.startsWith('topo-scriptgen--')) {
+      // 使用throwError抛出错误而不是alert
+      return throwError(() => new Error('This feature is only available for Topo Manager projects.'));
+    }
 
+    // 2. 发起HTTP GET请求并处理响应
+    return this.http.get<any>(
+      `https://${projectName}.coder-open.h3c.com/api/v1/physical-devices`
+    ).pipe(
+      map(response => {
+        // 3. 检查部署状态
+        if (response.deployStatus !== 'deployed') {
+          throw new Error(`Project deployment status is not 'deployed'. Current status: ${response.deployStatus}`);
+        }
+
+        // 4. 在device_list中查找与传入node.name匹配的设备
+        const deviceList = response.data?.device_list || [];
+        const currentNode = deviceList.find((device: any) => device.name === node.name);
+
+        if (!currentNode) {
+          throw new Error(`Device with name "${node.name}" not found in the physical-devices list.`);
+        }
+
+        // 5. 根据controller协议确定WebSocket协议
+        let protocol: string = "ws";
+        if (controller.protocol === "https:") {
+          protocol = "wss";
+        }
+
+        // 6. 使用匹配到的设备信息构造并返回WebSocket URL字符串
+        return `${protocol}://topo-executors.coder-open.h3c.com/${currentNode.executorip}?terminal=${currentNode.title}`;
+      }),
+      // 错误处理
+      catchError(error => {
+        console.error('Failed to get WebSocket URL:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+  
   openConsolesForAllNodesInWidget(nodes: Node[]) {
     let nodesToStart = 'Please start the following nodes if you want to open consoles for them: ';
     let nodesToStartCounter = 0;

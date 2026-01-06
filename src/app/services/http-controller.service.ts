@@ -220,6 +220,7 @@ export class HttpController {
         controller.protocol = location.protocol as ControllerProtocol;
       }
       url = `${controller.protocol}//${controller.host}:${controller.port}/${environment.current_version}${url}`;
+      //url = `${controller.protocol}//10.144.41.149:3080/${environment.current_version}${url}`;
     } else {
       url = `/${environment.current_version}${url}`;
     }
